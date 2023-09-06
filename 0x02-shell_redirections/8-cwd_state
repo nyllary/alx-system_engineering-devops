@@ -1,2 +1,2 @@
 #!/bin/bash
-echo 'list all files and directories in details. Include hidden ones' > ls_cwd_content
+ls -la > ls_cwd_content
