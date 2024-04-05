@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# Define the ports to filter for
+ports=("22" "80" "443")
+
+# Get listening sockets
+listening_sockets=$(lsof -i -P -n | grep LISTEN)
+
+# Print header
+echo "PID   Program   Port"
+
+# Iterate through each listening socket
+while IFS= read -r line; do
+    # Get PID and port from the line
+    pid=$(echo "$line" | awk '{print $2}')
+    port=$(echo "$line" | awk '{split($9,a,":"); print a[length(a)]}')
+    
+    # Check if the port matches one of the ports we are interested in
+    if [[ " ${ports[@]} " =~ " ${port} " ]]; then
+        # Get program name
+        program=$(ps -p $pid -o comm=)
+
+        # Print PID, program, and port
+        echo "$pid    $program    $port"
+    fi
+done <<< "$listening_sockets"
