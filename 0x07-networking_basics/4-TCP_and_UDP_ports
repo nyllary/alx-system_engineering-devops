@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+"This script displays listening ports thst only shows
+sockets and also shows the PID and the name of the program
+which socket belongs"
 
 # Define the ports to filter for
 ports=("22" "80" "443")
