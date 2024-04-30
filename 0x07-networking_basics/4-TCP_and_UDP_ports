@@ -1,37 +1,4 @@
 #!/usr/bin/env bash
 #displays listening ports
 
-# Define the ports to filter for
-ports=("22" "80" "443")
-
-# Print header
-echo "Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name"
-
-# Iterate through each port
-for port in "${ports[@]}"; do
-	# Get listening sockets for the port
-	listening_sockets=$(lsof -i -P -n | grep ":$port (LISTEN)")
-
-    # If no listening sockets found for the port, skip to the next port
-    if [[ -z "$listening_sockets" ]]; then
-	    continue
-    fi
-
-    # Determine protocol based on port
-    if [[ "$port" == "22" ]]; then
-	    protocol="tcp"
-    else
-	    protocol="udp"
-    fi
-
-    # Iterate through each listening socket for the port
-    while read -r line; do
-	    # Get PID, program name, and local address from the line
-	    pid=$(echo "$line" | awk '{print $2}')
-	    program=$(echo "$line" | awk '{print $1}')
-	    local_address=$(echo "$line" | awk '{print $8}')
-
-	# Print line in netstat-like format
-	printf "%-4s  %-7s %-9s %-22s %-22s %-11s %s\n" "$protocol" "0" "0" "$local_address" "*:*" "LISTEN" "$pid/$program"
-done <<< "$listening_sockets"
-done
+netstat -1 --program
